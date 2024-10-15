@@ -7,7 +7,7 @@ if (!existsSync("./data")) {
 
 async function add(data) {
   try {
-    const result = await loadData();
+    const result = JSON.parse(await loadData());
     result.push(data);
     await writeFile("./data/user.json", JSON.stringify(result, null, 2));
     return "Berhasil Ditambahkan";
