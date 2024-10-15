@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import { add, getData } from "./fungsi.mjs";
 
 const app = express();
 
@@ -12,6 +13,16 @@ app.get("/", (req, res) => {
 
 app.post("/login", (req, res) => {
   res.send(req.body);
+});
+
+app.post("/add", async (req, res) => {
+  const hasil = await add(req.body);
+  res.send(hasil);
+});
+
+app.get("/show", async (req, res) => {
+  const result = await getData();
+  res.send(result);
 });
 
 app.listen(3306, () => console.log("Server berjalan"));
