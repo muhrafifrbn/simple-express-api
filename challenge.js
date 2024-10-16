@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { add, getData } from "./fungsi.mjs";
+import { add, getData } from "./controller/fungsi.mjs";
 
 const app = express();
 

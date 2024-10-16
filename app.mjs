@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { add, getData } from "./fungsi.mjs";
+import db from "./connection.mjs";
+import { response } from "./controller/fungsi.mjs";
 
 const app = express();
 
@@ -11,18 +12,28 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.get("/cek", (req, res) => {
+  db.query("SELECT * FROM tester", (error, result, fields) => {
+    res.send(result);
+  });
+});
+
+app.get("/show", (req, res) => {
+  const sql = "SELECT * FROM tester";
+  db.query(sql, (error, result) => {
+    response(200, result, "Show Data", res);
+  });
+});
+
+app.get("/find/:nim", (req, res) => {
+  const sql = "SELECT * FROM tester WHERE nim = " + req.params.nim;
+  db.query(sql, (error, result) => {
+    response(200, result, "Find Data", res);
+  });
+});
+
 app.post("/login", (req, res) => {
   res.send(req.body);
 });
 
-app.post("/add", async (req, res) => {
-  const hasil = await add(req.body);
-  res.send(hasil);
-});
-
-app.get("/show", async (req, res) => {
-  const result = await getData();
-  res.send(result);
-});
-
-app.listen(3306, () => console.log("Server berjalan"));
+app.listen(3000, () => console.log("Server berjalan"));

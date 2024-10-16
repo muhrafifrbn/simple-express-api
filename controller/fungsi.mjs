@@ -31,4 +31,19 @@ async function loadData() {
   return await readFile("./data/user.json", { encoding: "utf-8" });
 }
 
-export { add, getData, loadData };
+const response = (statusResponse, result, message, res) => {
+  res.status(statusResponse).json({
+    message,
+    payload: {
+      statusResponse,
+      data: result,
+    },
+    paggination: {
+      prev: "",
+      next: "",
+      max: "",
+    },
+  });
+};
+
+export { add, getData, loadData, response };

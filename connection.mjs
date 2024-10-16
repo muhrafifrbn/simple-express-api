@@ -5,6 +5,7 @@ const db = mysql.createConnection({
   port: 3306,
   user: "root",
   password: "",
+  database: "db_perkantoran",
 });
 
 db.connect((error) => {
@@ -14,3 +15,5 @@ db.connect((error) => {
   }
   console.log("Database Terhubung");
 });
+
+export default db;
