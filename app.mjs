@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import db from "./connection.mjs";
-import { response } from "./controller/fungsi.mjs";
+import { response, getDataFromDatabase } from "./controller/fungsi.mjs";
 
 const app = express();
 
@@ -10,6 +10,12 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World");
+});
+
+app.get("/get-data", (req, res) => {
+  const sql = req.query.sql;
+  console.log(sql);
+  getDataFromDatabase({ query: sql, res, message: "Menampilkan Data" });
 });
 
 app.get("/cek", (req, res) => {
@@ -28,7 +34,12 @@ app.get("/show", (req, res) => {
 app.get("/find/:nim", (req, res) => {
   const sql = "SELECT * FROM tester WHERE nim = " + req.params.nim;
   db.query(sql, (error, result) => {
-    response(200, result, "Find Data", res);
+    if (error) {
+      console.log(error.sqlMessage);
+      response(500, result, error.sqlMessage, res);
+    } else {
+      response(200, result, "find data success", res);
+    }
   });
 });
 

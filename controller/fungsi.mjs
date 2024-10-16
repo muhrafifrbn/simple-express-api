@@ -1,5 +1,6 @@
 import { writeFile, readFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
+import db from "../connection.mjs";
 
 if (!existsSync("./data")) {
   mkdirSync("./data");
@@ -27,6 +28,12 @@ async function getData() {
   }
 }
 
+function getDataFromDatabase({ query, res, message }) {
+  db.query(query, (error, result) => {
+    response(200, result, message, res);
+  });
+}
+
 async function loadData() {
   return await readFile("./data/user.json", { encoding: "utf-8" });
 }
@@ -46,4 +53,4 @@ const response = (statusResponse, result, message, res) => {
   });
 };
 
-export { add, getData, loadData, response };
+export { add, getData, loadData, response, getDataFromDatabase };
