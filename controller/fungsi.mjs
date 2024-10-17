@@ -41,8 +41,8 @@ async function loadData() {
 const response = (statusResponse, result, message, res) => {
   res.status(statusResponse).json({
     message,
+    statusResponse,
     payload: {
-      statusResponse,
       data: result,
     },
     paggination: {
