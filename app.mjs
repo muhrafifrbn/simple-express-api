@@ -33,7 +33,7 @@ app.get("/mahasiswa/:nim", (req, res) => {
       if (error) throw error;
       response(200, result, message, res);
     } catch (error) {
-      response(500, error.sqlMessage, message, res);
+      response(500, error.sqlMessage, "Error", res);
     }
   });
 });
@@ -44,12 +44,36 @@ app.post("/mahasiswa/store", (req, res) => {
   const message = "Insert data";
   const sql = `INSERT INTO tester (nim,nama,alamat) VALUES ('${nim}', '${nama}', '${alamat}')`;
 
+  db.query(sql, (error, result, fields) => {
+    try {
+      if (error) throw error;
+      if (result.affectedRows > 0) {
+        let data = { isSucces: "true" };
+        response(200, data, message, res);
+      }
+    } catch (error) {
+      response(500, error.sqlMessage, "Error save data", res);
+    }
+  });
+});
+
+// Memperbarui data
+app.put("/mahasiswa/update", (req, res) => {
+  const { id, nama, alamat } = req.body;
+  const message = "update data";
+  const sql = `UPDATE tester SET nama='${nama}', alamat='${alamat}' WHERE id='${id}'`;
+
   db.query(sql, (error, result) => {
     try {
       if (error) throw error;
-      response(200, result, message, res);
+      if (result.affectedRows > 0) {
+        const data = { isSucces: true };
+        response(200, data, message, res);
+      } else {
+        response(404, "User Not Found", "Error update data", res);
+      }
     } catch (error) {
-      response(500, error.sqlMessage, message, res);
+      response(500, error.sqlMessage, "Error update data", res);
     }
   });
 });
