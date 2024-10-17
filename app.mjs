@@ -5,6 +5,8 @@ import db from "./connection.mjs";
 
 const app = express();
 
+app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.send("SIMPLE CRUD Mahasiswa");
 });
@@ -26,6 +28,22 @@ app.get("/mahasiswa", (req, res) => {
 app.get("/mahasiswa/:nim", (req, res) => {
   const sql = `SELECT * FROM tester WHERE nim = ${req.params.nim}`;
   const message = "display data base on nim";
+  db.query(sql, (error, result) => {
+    try {
+      if (error) throw error;
+      response(200, result, message, res);
+    } catch (error) {
+      response(500, error.sqlMessage, message, res);
+    }
+  });
+});
+
+// Menambahkan data mahasiswa
+app.post("/mahasiswa/store", (req, res) => {
+  const { nim, nama, alamat } = req.body;
+  const message = "Insert data";
+  const sql = `INSERT INTO tester (nim,nama,alamat) VALUES ('${nim}', '${nama}', '${alamat}')`;
+
   db.query(sql, (error, result) => {
     try {
       if (error) throw error;
