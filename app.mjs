@@ -31,7 +31,12 @@ app.get("/mahasiswa/:nim", (req, res) => {
   db.query(sql, (error, result) => {
     try {
       if (error) throw error;
-      response(200, result, message, res);
+      if (result.length != 0) {
+        response(200, result, message, res);
+        console.log(result);
+      } else {
+        response(200, "", "User Not Found", res);
+      }
     } catch (error) {
       response(500, error.sqlMessage, "Error", res);
     }
@@ -41,7 +46,6 @@ app.get("/mahasiswa/:nim", (req, res) => {
 // Menambahkan data mahasiswa
 app.post("/mahasiswa/store", (req, res) => {
   const { nim, nama, alamat } = req.body;
-  const message = "Insert data";
   const sql = `INSERT INTO tester (nim,nama,alamat) VALUES ('${nim}', '${nama}', '${alamat}')`;
 
   db.query(sql, (error, result, fields) => {
@@ -49,10 +53,10 @@ app.post("/mahasiswa/store", (req, res) => {
       if (error) throw error;
       if (result.affectedRows > 0) {
         let data = { isSucces: "true" };
-        response(200, data, message, res);
+        response(200, data, "Succes Insert data", res);
       }
     } catch (error) {
-      response(500, error.sqlMessage, "Error save data", res);
+      response(500, "", error.sqlMessage, res);
     }
   });
 });
@@ -60,7 +64,6 @@ app.post("/mahasiswa/store", (req, res) => {
 // Memperbarui data
 app.put("/mahasiswa/update", (req, res) => {
   const { id, nama, alamat } = req.body;
-  const message = "update data";
   const sql = `UPDATE tester SET nama='${nama}', alamat='${alamat}' WHERE id='${id}'`;
 
   db.query(sql, (error, result) => {
@@ -68,12 +71,12 @@ app.put("/mahasiswa/update", (req, res) => {
       if (error) throw error;
       if (result.affectedRows > 0) {
         const data = { isSucces: true };
-        response(200, data, message, res);
+        response(200, data, "Succes update data", res);
       } else {
-        response(404, "User Not Found", "Error update data", res);
+        response(404, "", "User Not Found", res);
       }
     } catch (error) {
-      response(500, error.sqlMessage, "Error update data", res);
+      response(500, "", error.sqlMessage, res);
     }
   });
 });
