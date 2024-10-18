@@ -81,4 +81,21 @@ app.put("/mahasiswa/update", (req, res) => {
   });
 });
 
+app.delete("/mahasiswa/delete", (req, res) => {
+  const { id } = req.body;
+  const sql = `DELETE FROM tester WHERE id = ${id}`;
+  db.query(sql, (error, result) => {
+    try {
+      if (error) throw error;
+      if (result.affectedRows > 0) {
+        response(200, "", "Succes delete data", res);
+      } else {
+        response(403, "", "user not found", res);
+      }
+    } catch (error) {
+      response(500, "", sqlMessage, res);
+    }
+  });
+});
+
 app.listen(3000, () => console.log("Server berjalan"));
